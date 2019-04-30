@@ -1,7 +1,0 @@
----
-inputs:
-  500:
-  - sum(id): 1
-  - sum(id): null
-  1000:
-  - sum(id): null
