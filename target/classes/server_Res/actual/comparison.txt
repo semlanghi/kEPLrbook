@@ -1,0 +1,25 @@
+Start Comparison:
+Time 500:
+ - 0th events: 
+  - Actual event : 
+    {sum(id)=1}
+  - Expected event: 
+    {type=NbaGamer, id=1, awayTeam=Sacramento Kings, homeTeam=New York Knicks}
+  - events_format are different
+ - 1th events: 
+  - Actual event : 
+    {sum(id)=null}
+  - No expected event
+******************************
+Time 1000:
+ - 0th events: 
+  - Actual event : 
+    {sum(id)=null}
+  - Expected event: 
+    {type=NbaGamer, id=2, awayTeam=Sacramento Kings, homeTeam=New York Knicks}
+  - events_format are different
+ - 1th events: 
+  - No actual event
+  - Expected event: 
+    {type=NbaGamer, id=3, awayTeam=Sacramento Kings, homeTeam=New York Knicks}
+******************************

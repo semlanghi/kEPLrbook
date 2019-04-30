@@ -1,0 +1,2 @@
+create schema NbaGamer as (type string, id int, awayTeam string, homeTeam string); 
+@name('Prova')select sum(id) from NbaGamer#time(500 milliseconds) output every 500 milliseconds; 

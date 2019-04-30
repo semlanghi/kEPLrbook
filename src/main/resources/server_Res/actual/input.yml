@@ -1,0 +1,19 @@
+inputs:
+  0 :
+    - type: "NbaGamer"
+      id: 1
+      awayTeam: "Sacramento Kings"
+      homeTeam: "New York Knicks"
+      
+  1000 :
+    - type: "NbaGamer"
+      id: 2
+      awayTeam: "Sacramento Kings"
+      homeTeam: "New York Knicks"
+      
+    - type: "NbaGamer"
+      id: 3
+      awayTeam: "Sacramento Kings"
+      homeTeam: "New York Knicks"
+      
+      
