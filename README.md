@@ -37,7 +37,8 @@ An input server that manages the input coming from the front-end of the applicat
 Data Params
 </a>**
 
-```inputs:
+```
+  inputs:
      0 :
        - type: "NbaGame"
          id: 1
