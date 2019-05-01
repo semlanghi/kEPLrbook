@@ -35,7 +35,7 @@ public class RuntimeServer {
 
             //File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/Tesi/kEPLrbook/kEPLrbook_servers/src/main/resources/server_Res/actualQuery/exp_query.epl");
 
-            File file = new File(Util.class.getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
+            File file = new File(Util.class.getClassLoader().getResource("actualQuery/exp_query.epl").getFile());
 
 
 
