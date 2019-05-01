@@ -17,6 +17,7 @@ Mirroring this classification the system is based on a 4-tier architecture in wh
 * Runtime Server
 * Jupyter Server
 
+
 ## Input Manager
 
 An input server that manages the input coming from the front-end of the application. The input is represented in YAML format and mapped using Jackson library ([Github](https://github.com/FasterXML/jackson)).
@@ -276,7 +277,7 @@ def getRequest(self):
 
 ## Jupyter Server
 
-The Jupyter Server is the location on which the jupyter kernel is running. The kernel is python-wrapped kernel for jupyter. The implementation of the _doExecute_ method is essential, since it basically changes the destination of the requests according to presence of a magic in the cell.
+The Jupyter Server is where the jupyter kernel is running. The kernel is a python-wrapped kernel for jupyter. The implementation of the _doExecute_ method is essential, since it basically changes the destination of the requests according to presence of a magic in the cell.
 
 ```
     def do_execute(self, code, silent,
@@ -343,12 +344,63 @@ none | /query | POST request with the content of the cell as the body, containin
 
 The various response of the requests are then returned to response cell of the relative run cell, with a simple text representation. 
 
-### Install Guide
+The notebook cells should be in this order 
+1. Query cell
+2. Input cell
+3. Output cell
 
-<fill it up>
+This is due to the fact that without an epl module the runtime cannot basically process events, so every events in input will be basically ignored. Point 2 and 3 are instead interchangeable.
+
   
 ## Architecture 
 
 The application is based on a 4-tier architecture. While the frontend communicates with the 3 servers through HTTP requests, these servers commmunicates using WebSockets, this way a constant, full-duplex communication can be established.
 
+![alt text](https://github.com/semlanghi/kEPLrbook/blob/master/src/main/resources/images/architecture.png)
 
+In our case to initiate the socket connection the order of execution should be:
+
+1. Runtime server
+2. Output Manager
+3. Input Manager
+
+While point 2 and 3 are interchangeable, the precedence of the Runtime Server is essential, since in the setting up of the WebSocket communication we treat the _Output Manager and Input Manager as the WebSocketClients_ and the _Runtime Server as the WebSocketServer._
+
+
+
+
+
+### Events flow
+
+1. Events in input are embedded in the input YAML file, posted on the Input Manager by the Jupyter Server with a POST request
+2. The file is read and mapped into **EventList** object
+3. Separates the event into single entities and embed them into **TimestampedEvent** object
+4. Serialize the created object into JSON format
+5. Using a WebSocketClient instance (connection already established) we send the previously created serialization to the Runtime Server
+6. The Runtime Server deserialize it and set the runtime time to the timestamp of the event before sending the event itself into the runtime
+7. The **SendingListener** object attached to the statement with name "Prova" is also a WebSocketManager object, and sends through web socket using the _update_ method the events arrived
+8. The Output Manager receives the events (as **TimestampedEvent** objects) and collect them, till the "finish" message is received
+9. [OPTIONAL] The Output Manager receives the expected outputs and map the file into an **EventList** object
+10. Once every event is collected into the **EventList** object the Server checks the "expected/output.yml" file
+11. If the "expected/output.yml" file contains the keyword "gotcha" the Output manager return the Actual Output representation (in YAML)
+12. Else, it computes the comparison between the 2 **EventList** objects and returns it
+
+
+## Guidelines for use
+
+Requirements 
+* Jupyter Notebook application installed
+* Maven to import the various libraries through the "pom.xml"
+
+To use it you have to install the jupyter kernel:
+
+```
+jupyter kernelspec install --user <path-to-kEPLr_kernel-dir>
+```
+
+Type this line into the command line.
+If it does not work try to modify appropiately the PYTHONPATH environment variable in the ".bash_profile" file.
+
+# Future Works 
+
+- [ ] Implement a Retry system during the websocket communication start in order to dockerize everything, since we cannot control the sequentiality of the execution of the 3 servers.
