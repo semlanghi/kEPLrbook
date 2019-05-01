@@ -1,4 +1,4 @@
 .idea/
-target/
-kEPLrbook.iml
+kEPLrbook_servers/target/
+kEPLrbook_servers/kEPLrbook_servers.iml
 jupyter_notebooks/__pycache__/
