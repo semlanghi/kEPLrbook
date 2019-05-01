@@ -35,9 +35,10 @@ public class RuntimeServer {
 
             //File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/Tesi/kEPLrbook/kEPLrbook_servers/src/main/resources/server_Res/actualQuery/exp_query.epl");
 
-            File file = new File(Util.class.getClassLoader().getResource("actualQuery/exp_query.epl").getFile());
+            File file = new File(new Util().getClass().getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
 
-
+            System.out.println(file.getAbsolutePath());
+            System.out.println(Util.readStringFromFile(file));
 
             if(!file.getParentFile().exists()){
                 file.getParentFile().mkdirs();

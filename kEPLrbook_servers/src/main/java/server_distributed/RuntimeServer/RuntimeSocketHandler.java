@@ -71,6 +71,7 @@ public class RuntimeSocketHandler {
                 "kEPLr_test/src/main/resources/server_Res/" +
                 "actualQuery" +"/exp_query.epl");*/
         queryFile = new File(Util.class.getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
+
         lastMod= -1;
         socketList = listener;
 
