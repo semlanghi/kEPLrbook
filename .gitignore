@@ -1,4 +1,5 @@
-.idea/
+kEPLrbook_servers/.idea/
 kEPLrbook_servers/target/
 kEPLrbook_servers/kEPLrbook_servers.iml
 jupyter_notebooks/__pycache__/
+jupyter_notebooks/.ipynb_checkpoints
