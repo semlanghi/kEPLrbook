@@ -274,4 +274,81 @@ def getRequest(self):
   print(r.text)
 ```
 
+## Jupyter Server
+
+The Jupyter Server is the location on which the jupyter kernel is running. The kernel is python-wrapped kernel for jupyter. The implementation of the _doExecute_ method is essential, since it basically changes the destination of the requests according to presence of a magic in the cell.
+
+```
+    def do_execute(self, code, silent,
+                   store_history=True,
+                   user_expressions=None,
+                   allow_stdin=False):
+
+        functions = code.split('\n')
+
+        line = functions[0]
+        n=0
+
+        # Processing the magics first, setting up the destination
+        if line[0] == '%':
+            self.connection.process_magics(line)
+            n = 1
+        else:
+            self.connection.switchDest("/query")
+            self.connection.switchHost("http://localhost:7890")
+        res = self.connection.sendMessage('\n'.join(functions[n:]))
+
+
+        if not silent:
+            # We send the standard output to the
+            # client.
+            self.send_response(
+                self.iopub_socket,
+                'stream', {
+                    'name': 'stdout',
+                    'data': ('Plotting {n} '
+                             'function(s)'). \
+                        format(n=len(functions))})
+
+            # We prepare the response, setting up the format.
+            content = {
+                'source': 'kernel',
+                'data': {
+                    'text/plain': res
+                },
+
+            }
+
+            # We send the display_data message with
+            # the contents.
+            self.send_response(self.iopub_socket,
+                               'display_data', content)
+
+        # We return the execution results.
+        return {'status': 'ok',
+                'execution_count':
+                    self.execution_count,
+                'payload': [],
+                'user_expressions': {},
+                }
+
+```
+
+Magic | Destination | Requests Succession 
+----- | ----------- | -------------------
+%input | /input | POST request with the input as the body
+%output | /output | POST request with the content of the cell as the body, then GET request
+none | /query | POST request with the content of the cell as the body, containing the epl module
+
+
+The various response of the requests are then returned to response cell of the relative run cell, with a simple text representation. 
+
+### Install Guide
+
+<fill it up>
+  
+## Architecture 
+
+The application is based on a 4-tier architecture. While the frontend communicates with the 3 servers through HTTP requests, these servers commmunicates using WebSockets, this way a constant, full-duplex communication can be established.
+
 
