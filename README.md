@@ -80,4 +80,42 @@ The server on which is located the Esper Runtime. It receives through web socket
 
 ### Query Insertion
 
-_The server exposes a single RESTful endpoint that is used to post the EPL module used to process the various events.
+_The server exposes a single RESTful endpoint that is used to post the EPL module used to process the various events._
+
+* **URL**
+
+  /query
+
+* **Method:**
+  
+  `POST` 
+
+* **Data Params**
+
+```
+create schema NbaGame as (type string, id int, awayTeam string, homeTeam string); 
+@name('Output')select sum(id) from NbaGame#time(500 milliseconds) output every 500 milliseconds; 
+```
+
+* **Success Response:**
+  
+  * **Code:** 200
+    **Content:** `Query file created.`
+ 
+* **Sample Call:**
+
+```
+def sendMessage(self, content):
+  r = self.session.post(self.host+"/query", content)
+  print(r.text)
+```
+* **Notes:**
+
+  * _The server store the module received as a file in order to always maintain and use at least a stored module in order to process the input._ 
+  * _The module **is not immediately deployed** but is simply stored._
+  * _The module is deployed into the runtime by the web socket when the first event arrives and the module file has been modified. In that case all the previous modules are undeployed and the new module is loaded._
+  
+
+
+
+  
