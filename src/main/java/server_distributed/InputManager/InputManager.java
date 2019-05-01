@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import server_distributed.Util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,9 +47,14 @@ public class InputManager {
 
             post("/input", (req, res)->{
 
-                File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+                ClassLoader loader = Util.class.getClassLoader();
+
+                /*File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
-                        "actual" +"/input.yml");
+                        "actual" +"/input.yml");*/
+
+                File file = new File(loader.getResource("server_Res/actual/input.yml").getFile());
+
 
                 if(!file.getParentFile().exists())
                     file.getParentFile().mkdirs();

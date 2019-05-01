@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import server_distributed.Util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,9 +33,11 @@ public class OutputSocketHandler {
 
     public OutputSocketHandler(){
 
-        actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+        /*actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                 "kEPLr_test/src/main/resources/server_Res/" +
-                "actual"+"/output.yml");
+                "actual"+"/output.yml");*/
+        actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
+
 
         if(!actual.getParentFile().exists()){
             actual.getParentFile().mkdirs();

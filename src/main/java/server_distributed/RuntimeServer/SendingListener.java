@@ -27,6 +27,7 @@ public class SendingListener implements UpdateListener {
     private ObjectMapper mapper;
 
 
+
     public SendingListener(){
         this.mapper = new ObjectMapper();
     }
@@ -85,6 +86,7 @@ public class SendingListener implements UpdateListener {
 
                     if(e.getUnderlying() instanceof com.espertech.esper.common.internal.collection.Pair){
 
+                        System.out.println("its a pair");
                         Map<String, Object> event = new HashMap<String, Object>();
 
                         com.espertech.esper.common.internal.collection.Pair actualEvent = (com.espertech.esper.common.internal.collection.Pair) e.getUnderlying();

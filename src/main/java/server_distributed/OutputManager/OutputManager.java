@@ -42,7 +42,12 @@ public class OutputManager {
 
             get("/final_output", (((request, response) -> {
 
-                File expected = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+                File expected = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
+                File actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
+                File finalOutput = new File(Util.class.getClassLoader().getResource("server_Res/actual/comparison.txt").getFile());
+
+
+                /*File expected = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "expected"+"/output.yml");
                 File actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
@@ -51,7 +56,7 @@ public class OutputManager {
 
                 File finalOutput = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
-                        "actual"+"/comparison.txt");
+                        "actual"+"/comparison.txt");*/
                 response.type("text/plain");
                 if(!expected.exists()||Util.readStringFromFile(expected).equalsIgnoreCase("gotcha")){
 
@@ -80,17 +85,23 @@ public class OutputManager {
 
 
 
-                File expected = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
-                        "kEPLr_test/src/main/resources/server_Res/" +
-                        "expected"+"/output.yml");
 
-                File actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+
+                /*File expected = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+                        "kEPLr_test/src/main/resources/server_Res/" +
+                        "expected"+"/output.yml");*/
+
+                File expected = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
+                File actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
+                File finalOutput = new File(Util.class.getClassLoader().getResource("server_Res/actual/comparison.txt").getFile());
+
+                /*File actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "actual"+"/output.yml");
 
                 File finalOutput = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
-                        "actual"+"/comparison.txt");
+                        "actual"+"/comparison.txt");*/
 
                 if(!expected.exists()||Util.readStringFromFile(expected).equalsIgnoreCase("gotcha")){
                     return "http://localhost:1234/final_output";
@@ -190,9 +201,12 @@ public class OutputManager {
 
             post("/output", (req, res)->{
 
-                File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+                /*File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
-                        "expected"+"/output.yml");
+                        "expected"+"/output.yml");*/
+
+                File file = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
+
 
                 if(!file.getParentFile().exists())
                     file.getParentFile().mkdirs();
@@ -209,7 +223,7 @@ public class OutputManager {
                     bw.flush();
                     bw.close();
                     fw.close();
-                    return "created Output";
+                    return "Created expected output file.";
                 }
 
 

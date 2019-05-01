@@ -66,9 +66,11 @@ public class RuntimeSocketHandler {
         runtime.getEventService().advanceTime(0);
         args.setConfiguration(config);
         compiler = EPCompilerProvider.getCompiler();
-        queryFile = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+
+        /*queryFile = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                 "kEPLr_test/src/main/resources/server_Res/" +
-                "actualQuery" +"/exp_query.epl");
+                "actualQuery" +"/exp_query.epl");*/
+        queryFile = new File(Util.class.getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
         lastMod= -1;
         socketList = listener;
 

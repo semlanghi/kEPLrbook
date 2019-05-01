@@ -1,5 +1,7 @@
 package server_distributed.RuntimeServer;
 
+import server_distributed.Util;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -28,9 +30,14 @@ public class RuntimeServer {
 
 
 
-            File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
+
+
+
+            /*File file = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                     "kEPLr_test/src/main/resources/server_Res/" +
-                    "actualQuery" +"/exp_query.epl");
+                    "actualQuery" +"/exp_query.epl");*/
+
+            File file = new File(Util.class.getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
 
             if(!file.getParentFile().exists()){
                 file.getParentFile().mkdirs();
@@ -50,7 +57,7 @@ public class RuntimeServer {
                 bw.flush();
                 bw.close();
                 fw.close();
-                return "file created.";
+                return "Query file created.";
 
             }else{
 

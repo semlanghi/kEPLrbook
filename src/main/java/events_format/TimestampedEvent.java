@@ -6,7 +6,7 @@ public class TimestampedEvent {
 
     private Long ts;
     private Map<String, Object> event;
-    private String eventType;
+
 
     public TimestampedEvent(){
     }
@@ -16,13 +16,7 @@ public class TimestampedEvent {
         this.event = event;
     }
 
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
 
-    public String getEventType() {
-        return eventType;
-    }
 
     public Long getTs() {
         return ts;
