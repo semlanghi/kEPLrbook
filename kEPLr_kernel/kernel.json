@@ -1,0 +1,8 @@
+{
+ "argv": ["python", "-m",
+          "kEPLr_kernel", "-f",
+          "{connection_file}"],
+ "display_name": "kEPLr",
+ "name": "kEPLr",
+ "language": "python"
+}
