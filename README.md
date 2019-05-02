@@ -356,7 +356,7 @@ This is due to the fact that without an epl module the runtime cannot basically 
 
 The application is based on a 4-tier architecture. While the frontend communicates with the 3 servers through HTTP requests, these servers commmunicates using WebSockets, this way a constant, full-duplex communication can be established.
 
-![alt text](https://github.com/semlanghi/kEPLrbook/blob/master/src/main/resources/images/architecture.png)
+![alt text](https://github.com/semlanghi/kEPLrbook/blob/master/kEPLrbook_servers/src/main/resources/images/architecture.png)
 
 In our case to initiate the socket connection the order of execution should be:
 
