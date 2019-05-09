@@ -49,23 +49,44 @@ public class RuntimeSocketHandler {
 
     private EPDeployment lastDeployment;
 
+    private EPCompiled compiled;
+
+    public EPCompiled getCompiled() {
+        return compiled;
+    }
+
+    public EPCompiler getCompiler() {
+        return compiler;
+    }
+
+    public EPRuntime getRuntime() {
+        return runtime;
+    }
+
+    public EPStatement getStmt() {
+        return stmt;
+    }
+
+    public SendingListener getSocketList() {
+        return socketList;
+    }
+
     public RuntimeSocketHandler(SendingListener listener){
 
         Configuration config = Util.createConfiguration();
         //config.getCommon().addEventType(NbaGame.class);
 
-        Map<String, Object> cfg= new HashMap<String, Object>();
-        cfg.put("type", String.class);
-        cfg.put("id", Integer.class);
-        cfg.put("awayTeam", String.class);
-        cfg.put("homeTeam", String.class);
-        //config.getCommon().addEventType("Cacca", cfg);
 
         runtime = EPRuntimeProvider.getDefaultRuntime(config);
         runtime.getEventService().clockExternal();
         runtime.getEventService().advanceTime(0);
+        config.getCompiler().getByteCode().setIncludeDebugSymbols(true);
+
+
+
         args.setConfiguration(config);
         compiler = EPCompilerProvider.getCompiler();
+
 
         /*queryFile = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                 "kEPLr_test/src/main/resources/server_Res/" +
@@ -123,20 +144,22 @@ public class RuntimeSocketHandler {
     }
 
 
+    public CompilerArguments getArgs() {
+        return args;
+    }
+
+    public void setStmt(EPStatement stmt) {
+
+        this.stmt = stmt;
+    }
+
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
 
         // take the event in input in json format and automatically forward it to the
         // other session
 
-        /*if(inputSession==null){
-            inputSession=session;
 
-            for(Session s : sessions){
-                if(session!=s)
-                    outputSession = s;
-            }
-        }*/
         System.out.println("received "+message);
 
         if(message.equals("keep-alive")){
@@ -152,75 +175,28 @@ public class RuntimeSocketHandler {
         if(!queryFile.exists()){
             session.getRemote().sendString("KO, no query file.");
             return;
-        }else{
-            if(queryFile.lastModified()!=lastMod){
-                lastMod=queryFile.lastModified();
-                try {
-                    System.out.println("modifying the query file");
-                    if(stmt!=null)
-                        stmt.removeAllListeners();
-                    runtime.getDeploymentService().undeployAll();
-                    runtime.getEventService().advanceTime(0);
-
-                    //EPCompiled compiled = compiler.compile(Util.readStringFromFile(queryFile), args);
-                    Module mod = compiler.readModule(queryFile);
-                    EPCompiled compiled = compiler.compile(mod, args);
-                    EPDeployment deployment = runtime.getDeploymentService().deploy(compiled);
-                    lastDeployment = deployment;
-                    if(runtime.getDeploymentService().getStatement(deployment.getDeploymentId(), "Prova")!=null){
-                        stmt = runtime.getDeploymentService().getStatement(deployment.getDeploymentId(), "Prova");
-                        stmt.addListener(socketList);
-                    }
-
-                } catch (EPCompileException e) {
-                    e.printStackTrace();
-                } catch (EPDeployException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (EPUndeployException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-
-
-
         ObjectMapper mapper = new ObjectMapper();
         TimestampedEvent eventTimestamped = mapper.readValue(message, TimestampedEvent.class);
 
         //System.out.println(eventTimestamped);
         Long i = new Long(eventTimestamped.getTs());
 
+
         for(long t = runtime.getEventService().getCurrentTime(); t<=i; t++){
             runtime.getEventService().advanceTime(t);
         }
+
+
         //eventTimestamped.setEventType("Cacca");
 
 
         Map<String, Object> map = new HashMap<String, Object>(eventTimestamped.getEvent());
 
 
-
-
-
         String eventType = (String)map.get("type");
         //System.out.println(map.getClass());
         runtime.getEventService().sendEventMap(map, eventType);
-
-
-
-
-        /*Iterator<UpdateListener> it = stmt.getUpdateListeners();
-        while(it.hasNext()){
-            Pair<Long, EventBean[]> beans = ((SendingListener)it.next()).getArrivedEvents();
-            for(EventBean e : beans.getValue()){
-                System.out.println("sending "+e.getUnderlying().getClass().getName()+"\n");
-                outputSession.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(beans.getKey(), (NbaGame)e.getUnderlying())));
-            }
-        }*/
-
-
 
 
 

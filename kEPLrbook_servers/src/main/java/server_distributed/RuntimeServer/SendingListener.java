@@ -1,5 +1,6 @@
 package server_distributed.RuntimeServer;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import events_format.TimestampedEvent;
 import com.espertech.esper.common.client.EventBean;
 import com.espertech.esper.runtime.client.EPRuntime;
@@ -30,6 +31,7 @@ public class SendingListener implements UpdateListener {
 
     public SendingListener(){
         this.mapper = new ObjectMapper();
+        this.mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
     @OnWebSocketClose
@@ -96,7 +98,12 @@ public class SendingListener implements UpdateListener {
 
                         session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getKey(), event)));
 
-                    }else session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getKey(), (Map<String, Object>)e.getUnderlying())));
+                    }else {
+                        //Map<String, Object> map = (Map<String, Object>)e.getUnderlying();
+                        //System.out.println(map.get("a"));
+
+                        session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getKey(), (Map<String, Object>)e.getUnderlying())));
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

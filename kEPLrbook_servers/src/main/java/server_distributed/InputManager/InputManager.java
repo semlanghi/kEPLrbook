@@ -33,6 +33,8 @@ public class InputManager {
             e.printStackTrace();
         }
 
+        socketClient.setMaxIdleTimeout(1000000);
+
         socketClient.setStopAtShutdown(true);
 
 
