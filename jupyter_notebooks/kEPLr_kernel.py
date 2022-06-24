@@ -30,10 +30,10 @@ class EsperConnection:
         # Process each magic
         if cmd == 'output':
             self.pathname = "/output"
-            self.host = "http://localhost:1234"
+            self.host = "http://outputmanager:1234"
         elif cmd == 'input':
             self.pathname = "/input"
-            self.host = "http://localhost:4567"
+            self.host = "http://inputmanager:4567"
 
     def sendMessage(self, content):
 
@@ -78,7 +78,7 @@ class kEPLrKernel(Kernel):
             n = 1
         else:
             self.connection.switchDest("/query")
-            self.connection.switchHost("http://localhost:7890")
+            self.connection.switchHost("http://runtime:7890")
         res = self.connection.sendMessage('\n'.join(functions[n:]))
 
 

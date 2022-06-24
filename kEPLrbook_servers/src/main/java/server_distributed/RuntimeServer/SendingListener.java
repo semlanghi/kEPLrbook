@@ -1,5 +1,6 @@
 package server_distributed.RuntimeServer;
 
+import com.espertech.esper.common.internal.collection.Pair;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import events_format.TimestampedEvent;
 import com.espertech.esper.common.client.EventBean;
@@ -7,7 +8,7 @@ import com.espertech.esper.runtime.client.EPRuntime;
 import com.espertech.esper.runtime.client.EPStatement;
 import com.espertech.esper.runtime.client.UpdateListener;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.util.Pair;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -82,7 +83,7 @@ public class SendingListener implements UpdateListener {
             Pair<Long,EventBean[]> arrivedEvents= new Pair<>(runtime.getEventService().getCurrentTime(), newEvents);
 
 
-            for(EventBean e : arrivedEvents.getValue()){
+            for(EventBean e : arrivedEvents.getSecond()){
                 System.out.println("sending "+e.getUnderlying()+"\n");
                 try {
 
@@ -96,13 +97,13 @@ public class SendingListener implements UpdateListener {
                         event.putAll((Map<String, Object>)actualEvent.getFirst());
                         event.putAll((Map<String, Object>)actualEvent.getSecond());
 
-                        session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getKey(), event)));
+                        session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getFirst(), event)));
 
                     }else {
                         //Map<String, Object> map = (Map<String, Object>)e.getUnderlying();
                         //System.out.println(map.get("a"));
 
-                        session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getKey(), (Map<String, Object>)e.getUnderlying())));
+                        session.getRemote().sendString(mapper.writeValueAsString(new TimestampedEvent(arrivedEvents.getFirst(), (Map<String, Object>)e.getUnderlying())));
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();

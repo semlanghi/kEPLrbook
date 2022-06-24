@@ -36,7 +36,7 @@ public class OutputSocketHandler {
         /*actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                 "kEPLr_test/src/main/resources/server_Res/" +
                 "actual"+"/output.yml");*/
-        actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
+        actual = new File("/actual/output.yml");
 
 
         if(!actual.getParentFile().exists()){

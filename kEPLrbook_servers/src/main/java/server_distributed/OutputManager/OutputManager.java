@@ -36,15 +36,15 @@ public class OutputManager {
         try {
             port(1234);
 
-            Future<Session> sessionFuture = socketClient.connect(new OutputSocketHandler(), new URI("ws://localhost:7890/outputsocket"), new ClientUpgradeRequest());
+            Future<Session> sessionFuture = socketClient.connect(new OutputSocketHandler(), new URI("ws://runtime:7890/outputsocket"), new ClientUpgradeRequest());
 
             staticFiles.location("/expected");
 
             get("/final_output", (((request, response) -> {
 
-                File expected = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
-                File actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
-                File finalOutput = new File(Util.class.getClassLoader().getResource("server_Res/actual/comparison.txt").getFile());
+                File expected = new File("/expected/output.yml");
+                File actual = new File("/actual/output.yml");
+                File finalOutput = new File("/actual/comparison.txt");
 
 
                 /*File expected = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
@@ -58,7 +58,7 @@ public class OutputManager {
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "actual"+"/comparison.txt");*/
                 response.type("text/plain");
-                if(!expected.exists()||Util.readStringFromFile(expected).equalsIgnoreCase("gotcha")){
+                if(Util.readStringFromFile(expected).equalsIgnoreCase("gotcha")){
 
                     return Util.readStringFromFile(actual);
                 }else{
@@ -91,9 +91,9 @@ public class OutputManager {
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "expected"+"/output.yml");*/
 
-                File expected = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
-                File actual = new File(Util.class.getClassLoader().getResource("server_Res/actual/output.yml").getFile());
-                File finalOutput = new File(Util.class.getClassLoader().getResource("server_Res/actual/comparison.txt").getFile());
+                File expected = new File("/expected/output.yml");
+                File actual = new File("/actual/output.yml");
+                File finalOutput = new File("server_Res/actual/comparison.txt");
 
                 /*File actual = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                         "kEPLr_test/src/main/resources/server_Res/" +
@@ -128,7 +128,7 @@ public class OutputManager {
                         if(listExpected.getInputs().keySet().contains(t) && listActual.getInputs().keySet().contains(t)){
 
                             for(int j=0; j<Math.max(listExpected.getInputs().get(t).size(), listActual.getInputs().get(t).size()); j++){
-                                builder.append(" - "+j+"th events: \n");
+                                builder.append(" - "+(j+1)+"th events: \n");
 
                                 Map<String, Object> expectedEvent = new HashMap<>();
                                 Map<String, Object> actualEvent = new HashMap<>();
@@ -191,7 +191,7 @@ public class OutputManager {
                     buff.write(builder.toString());
                     buff.flush();
 
-                    return "http://localhost:1234/final_output";
+                    return builder.toString();
 
 
 
@@ -205,7 +205,7 @@ public class OutputManager {
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "expected"+"/output.yml");*/
 
-                File file = new File(Util.class.getClassLoader().getResource("server_Res/expected/output.yml").getFile());
+                File file = new File("/expected/output.yml");
 
 
                 if(!file.getParentFile().exists())

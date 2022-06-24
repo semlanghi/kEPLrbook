@@ -1,5 +1,6 @@
 package server_distributed.RuntimeServer;
 
+import com.espertech.esper.common.client.EPException;
 import events_format.TimestampedEvent;
 import com.espertech.esper.common.client.EPCompiled;
 import com.espertech.esper.common.client.configuration.Configuration;
@@ -91,7 +92,7 @@ public class RuntimeSocketHandler {
         /*queryFile = new File("/Users/samuelelanghi/Documents/Polimi/anno_5/" +
                 "kEPLr_test/src/main/resources/server_Res/" +
                 "actualQuery" +"/exp_query.epl");*/
-        queryFile = new File(Util.class.getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
+        queryFile = new File("exp_query.epl");
 
         lastMod= -1;
         socketList = listener;
@@ -196,7 +197,13 @@ public class RuntimeSocketHandler {
 
         String eventType = (String)map.get("type");
         //System.out.println(map.getClass());
-        runtime.getEventService().sendEventMap(map, eventType);
+
+        try{
+            runtime.getEventService().sendEventMap(map, eventType);
+        } catch (EPException e){
+            e.printStackTrace();
+        }
+
 
 
 

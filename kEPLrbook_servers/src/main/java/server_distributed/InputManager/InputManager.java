@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import static spark.Spark.port;
 import static spark.Spark.post;
 
 public class InputManager {
@@ -37,15 +38,10 @@ public class InputManager {
 
         socketClient.setStopAtShutdown(true);
 
-
-
-
-
-
-
         try {
+            port(4567);
 
-            Future<Session> sessionFuture = socketClient.connect(new InputSocketHandler(), new URI("ws://localhost:7890/inputsocket"), new ClientUpgradeRequest());
+            Future<Session> sessionFuture = socketClient.connect(new InputSocketHandler(), new URI("ws://runtime:7890/inputsocket"), new ClientUpgradeRequest());
 
             post("/input", (req, res)->{
 
@@ -55,7 +51,7 @@ public class InputManager {
                         "kEPLr_test/src/main/resources/server_Res/" +
                         "actual" +"/input.yml");*/
 
-                File file = new File(loader.getResource("server_Res/actual/input.yml").getFile());
+                File file = new File("/actual/input.yml");
 
 
                 if(!file.getParentFile().exists())

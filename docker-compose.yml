@@ -1,0 +1,37 @@
+services:
+  runtime:
+    build: ./kEPLrbook_servers/
+    hostname: runtime
+    ports:
+      - "7890:7890"
+    command: java -cp ./target/kEPLrbook-jar-with-dependencies.jar server_distributed.RuntimeServer.RuntimeServer > runtime.out
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:7890/healthcheck"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+  inputmanager:
+    build: ./kEPLrbook_servers/
+    hostname: inputmanager
+    ports:
+      - "4567:4567"
+    depends_on:
+      runtime: 
+        condition: service_healthy
+    command: java -cp ./target/kEPLrbook-jar-with-dependencies.jar server_distributed.InputManager.InputManager > inputmanager.out
+  outputmanager:
+    build: ./kEPLrbook_servers/
+    hostname: outputmanager
+    ports:
+      - "1234:1234"
+    depends_on:
+      runtime: 
+        condition: service_healthy
+    command: java -cp ./target/kEPLrbook-jar-with-dependencies.jar server_distributed.OutputManager.OutputManager > outputmanager.out
+  notebooks:
+    build: ./
+    hostname: notebooks
+    ports:
+      - "8888:8888"
+    command: jupyter notebook --ip='*' --NotebookApp.token='' --NotebookApp.password=''
+

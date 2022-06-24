@@ -35,16 +35,18 @@ public class RuntimeServer {
 
         webSocket("/outputsocket", socketList);
 
+        get("/healthcheck", ((request, response) -> {
+            response.status(200);
+            return response;
+        }));
+
         post("/query", ((request, response) -> {
 
-            File file = new File(new Util().getClass().getClassLoader().getResource("server_Res/actualQuery/exp_query.epl").getFile());
+            File file = new File("exp_query.epl");
 
-            System.out.println(file.getAbsolutePath());
-            System.out.println(Util.readStringFromFile(file));
-
-            if(!file.getParentFile().exists()){
-                file.getParentFile().mkdirs();
-            }
+//            if(!file.getParentFile().exists()){
+//                file.getParentFile().mkdirs();
+//            }
 
             boolean created;
             if(!file.exists()){
