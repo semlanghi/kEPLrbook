@@ -403,4 +403,16 @@ If it does not work try to modify appropiately the PYTHONPATH environment variab
 
 # Future Works 
 
-- [ ] Implement a Retry system during the websocket communication start in order to dockerize everything, since we cannot control the sequentiality of the execution of the 3 servers.
+- [X] Implement a Retry system during the websocket communication start in order to dockerize everything, since we cannot control the sequentiality of the execution of the 3 servers.
+
+
+# Docker
+
+To run the containerized version, just type `docker-compose up` inside the main repository folder. This will start 4 docker containers:
+- runtime
+- inputmanager
+- outputmanager
+- notebooks
+
+In order to access the notebooks, it is sufficient to connect to the browser at `localhost:8888`, no password required. 
+
