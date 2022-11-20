@@ -104,7 +104,7 @@ public class OutputManager {
                         "actual"+"/comparison.txt");*/
 
                 if(!expected.exists()||Util.readStringFromFile(expected).equalsIgnoreCase("gotcha")){
-                    return "http://localhost:1234/final_output";
+                    return Util.readStringFromFile(actual);
                 }else{
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
