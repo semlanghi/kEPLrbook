@@ -4,6 +4,19 @@
 
 A Jupyter notebook buildt for experimenting with EPL. 
 Experimental interactive environment, every notebook could be considered an experiment itself, so could be then exported and stored. 
+
+## Docker
+
+To run the containerized version, just type `docker-compose up` inside the main repository folder. This will start 4 docker containers:
+- runtime
+- inputmanager
+- outputmanager
+- notebooks
+
+In order to access the notebooks, it is sufficient to connect to the browser at `localhost:8888`, no password required. 
+
+## Experiment Design
+
 The experiment is based on 3 primary elements
 
 * Input: the events in input that are inserted into the runtime
@@ -18,11 +31,11 @@ Mirroring this classification the system is based on a 4-tier architecture in wh
 * Jupyter Server
 
 
-## Input Manager
+### Input Manager
 
 An input server that manages the input coming from the front-end of the application. The input is represented in YAML format and mapped using Jackson library ([Github](https://github.com/FasterXML/jackson)).
 
-### Input Insertion
+#### Input Insertion
 
   _The input is sent to the server in YAML format and then processed. In the input the events are represented as a time keyed map in which are listed all the events that should be sent in that timestamp ([Sample](#body)). The server reads it, mapping it into a special list object called **EventList** and separates the events into single, timestampend entities, using a wrapper called **TimestampedEvent**._
 
@@ -76,11 +89,11 @@ def sendMessage(self, content):
   * _The serialization format of event sent to the runtime is JSON._
   * _After having sent all the events as TimestampedEvents the server send a "finish" message in order to indicate that there are no more input events._
 
-## Runtime Server
+### Runtime Server
 
 The server on which is located the Esper Runtime. It receives through web socket the various input events and sends them into the Esper Runtime.
 
-### Query Insertion
+#### Query Insertion
 
 _The server exposes a single RESTful endpoint that is used to post the EPL module used to process the various events._
 
@@ -118,13 +131,13 @@ def sendMessage(self, content):
   * _The module is deployed into the runtime by the web socket manager object when the first event arrives and the module file has been modified. In that case all the previous modules are undeployed and the new module is loaded._
   
 
-## Output Manager
+### Output Manager
 
 The Output Manager receives the resulting events from the runtime through the web socket. If an expected output is specified, this is received from the server and used to compare it with the actual output. The server receives the event **one by one** so basically it collects them and, once the "finished" message arrives, stores the event onto a file, using it after for comparison if the expected output is present. 
 
 _In case the expected output is not specified the Output Manager will simply compose a representation of the actual output._
 
-### Output Insertion
+#### Output Insertion
 
   _The expected is sent to the server in YAML format and then processed. In the output the events are represented as a time keyed map in which are listed all the events that should be arrived in that timestamp ([Sample](#output)), just like the input. The server reads it, mapping it into the object **EventList**._
 
@@ -178,7 +191,7 @@ def sendMessage(self, content):
   * _The serialization format of event received by the runtime is JSON._
   
 
-### Output Link Retrieval
+#### Output Link Retrieval
 
   _At first the server checks that both the "actual output" and the "expected output" files exists, then if in the "expected output" file is present the server will proceed to writing the "comparison.txt" file. The comparison is done checking both the **EventList** objects (composed from the previously cited output files, using the jackson mapper), checking if both elements have at first the same timestamps, then comparing the event lists for each timestamp. At the end the method will return the **link to retrieve the comparison result**. If no expected output is provided (keyword "gotcha" in the "expected output" file) the comparison file will be written with the content of the "actual output" file_
   
@@ -209,7 +222,7 @@ def getRequest(self):
   * _The comparison file is a txt file since gives more freedom on the format of representation, since it must adapt to a comparison result (a simple text), and also to the actual output representation (text written in YAML format)_
   
 
-### Output Retrieval
+#### Output Retrieval
 
 _Endpoint for the retrieval of the final result, being it the actual output or the comparison result. The endpoint is reached when, through the browser, the result link is clicked, this way the server can set up the response of a get request from the browser with the final result._
 
@@ -275,7 +288,7 @@ def getRequest(self):
   print(r.text)
 ```
 
-## Jupyter Server
+### Jupyter Server
 
 The Jupyter Server is where the jupyter kernel is running. The kernel is a python-wrapped kernel for jupyter. The implementation of the _doExecute_ method is essential, since it basically changes the destination of the requests according to presence of a magic in the cell.
 
@@ -386,7 +399,7 @@ While point 2 and 3 are interchangeable, the precedence of the Runtime Server is
 12. Else, it computes the comparison between the 2 **EventList** objects and returns it
 
 
-## Guidelines for use
+## Guidelines for use (Local Version, not Docker)
 
 Requirements 
 * Jupyter Notebook application installed
@@ -406,13 +419,5 @@ If it does not work try to modify appropiately the PYTHONPATH environment variab
 - [X] Implement a Retry system during the websocket communication start in order to dockerize everything, since we cannot control the sequentiality of the execution of the 3 servers.
 
 
-# Docker
 
-To run the containerized version, just type `docker-compose up` inside the main repository folder. This will start 4 docker containers:
-- runtime
-- inputmanager
-- outputmanager
-- notebooks
-
-In order to access the notebooks, it is sufficient to connect to the browser at `localhost:8888`, no password required. 
 
