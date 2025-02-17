@@ -414,6 +414,13 @@ jupyter kernelspec install --user <path-to-kEPLr_kernel-dir>
 Type this line into the command line.
 If it does not work try to modify appropiately the PYTHONPATH environment variable in the ".bash_profile" file.
 
+# EPL Ambiguities
+
+The following are EPL query performance with two nested EVERY. This is to demonstrate the language risk in terms of performances. 
+
+![alt text](https://github.com/semlanghi/kEPLrbook/blob/master/perfeveryevery.png)
+
+
 # Future Works 
 
 - [X] Implement a Retry system during the websocket communication start in order to dockerize everything, since we cannot control the sequentiality of the execution of the 3 servers.
